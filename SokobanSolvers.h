@@ -10,6 +10,8 @@
 #include "SokobanMap.h"
 #include "SokobanState.h"
 #include "memory"
+#include <sstream>
+#include <fstream>
 
 
 template <bool useAstar>
@@ -29,16 +31,56 @@ std::pair<std::vector<Pos>,std::size_t> depthFirstSearch(const SokobanMap& gameM
 typedef std::unordered_set<std::shared_ptr<const SokobanState>,normalSokobanStateHash,normalSokobanStateEquals> normal_hashmap;
 
 constexpr bool printAstar = false;
-constexpr bool useHashMap = false;
+constexpr bool useHashMap = true;
 constexpr bool useMoveCull = true;
 
 std::vector<Pos> constructSequence(const std::shared_ptr<const SokobanState> finalState){
     std::vector<Pos> ret(finalState->turnsTaken+1);
     std::shared_ptr<const SokobanState> cStatePtr = finalState;
+    std::cout << "HI\n";
+    std::vector<std::shared_ptr<const SokobanState>> states;
     while(cStatePtr!=nullptr){
         const SokobanState& cState = *cStatePtr;
+        states.emplace_back(cStatePtr);
         ret[cState.turnsTaken] = cState.gameMap.idToCord[cState.posId];
         cStatePtr = cState.parentPtr;
+    }
+    std::ostringstream output;
+    std::vector<std::vector<std::string>> lines;
+    for(int i = states.size()-1; i >= 0; i--){
+        output << *states[i];
+        std::string strOut = output.str();
+        std::size_t index = 0;
+        int i2 = 0;
+        while(true){
+            std::size_t newIndex = strOut.find_first_of('\n',index);
+            while(lines.size()<=i2){
+                lines.emplace_back();
+            }
+            if(newIndex==std::string::npos){
+                lines[i2].push_back(strOut.substr(index));
+                break;
+            } else {
+                lines[i2].push_back(strOut.substr(index,newIndex-index));
+            }
+            i2++;
+            index = newIndex+1;
+        }
+        output = std::ostringstream();
+    }
+    const int inLine = 11;
+    for(int i = 0; i < lines[0].size(); i+=inLine){
+        for(int i3 = 0; i3 < lines.size(); i3 ++){
+        for(int i2 = 0; i2+i < lines[0].size() && i2 < inLine; i2++){
+            std::cout << lines[i3][i+i2];
+            if(i2+i+1==lines[0].size()||i2+1==inLine){
+                continue;
+            }
+            std::cout << "  ";
+        }
+        std::cout << '\n';
+        }
+        std::cout << '\n';
     }
     return ret;
 }
@@ -138,12 +180,14 @@ std::pair<std::vector<Pos>,std::size_t> depthFirstSearch(const SokobanMap& gameM
         movesToCheck.emplace(std::make_shared<const SokobanState>(gameMap));
     }
     uint16_t turnsTaken = 65535;
+    std::shared_ptr<const SokobanState> finalState = nullptr;
     while (!movesToCheck.empty()) {
         totalStates++;
         std::shared_ptr<const SokobanState> mToCheck = movesToCheck.top();
         movesToCheck.pop();
         if(mToCheck->remaningHoles==0){
             turnsTaken = mToCheck->turnsTaken;
+            finalState = mToCheck;
             break;
         }
         SokobanState::addMoves<useHashMap,QT,normal_hashmap,useMoveCull>(mToCheck,movesToCheck, usedStates);
@@ -152,7 +196,7 @@ std::pair<std::vector<Pos>,std::size_t> depthFirstSearch(const SokobanMap& gameM
     if constexpr (useHashMap){
         totalStates = usedStates.size();
     }
-    return std::make_pair(std::vector<Pos>(turnsTaken),totalStates);
+    return std::make_pair(constructSequence(finalState),totalStates);
 }
 
 // std::vector<Pos> depthFirstSearchwithIterativeDeepining(const SokobanMap& gameMap){

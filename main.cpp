@@ -69,7 +69,7 @@ int main() {
     // const std::vector<uint16_t> input = {0, 1, 2, 3, 7, 8, 9, 10, 12, 13};
     // const Map map(input);
     const std::vector<std::string> gameMapArr = {
-        "\
+        // "\
 -------- ------\n\
 |<|>...---....|\n\
 |.|-..........|\n\
@@ -81,30 +81,30 @@ int main() {
 |.....^.......|\n\
 |..-----......|\n\
 ----   --------",
+//         "\
+// -------- ------\n\
+// |<|>...---....|\n\
+// |.|-..........|\n\
+// |.||..00|.....|\n\
+// |.||....|.....|\n\
+// |.|------0----|\n\
+// |.|    |......|\n\
+// |^------......|\n\
+// |..^^^^0.0....|\n\
+// |..-----......|\n\
+// ----   --------",
         "\
--------- ------\n\
-|<|>...---....|\n\
-|.|-..........|\n\
-|.||..00|.....|\n\
-|.||....|.....|\n\
-|.|------0----|\n\
-|.|    |......|\n\
-|^------......|\n\
-|..^^^^0.0....|\n\
-|..-----......|\n\
-----   --------",
-        "\
--------- ------\n\
-|<|>...---....|\n\
-|.|-..........|\n\
-|.||..00|...0.|\n\
-|.||....|.....|\n\
-|^|------.----|\n\
-|^|    |......|\n\
-|^------......|\n\
-|..^^^^0000...|\n\
-|..-----......|\n\
-----   --------",
+// -------- ------\n\
+// |<|>...---....|\n\
+// |.|-..........|\n\
+// |.||..00|...0.|\n\
+// |.||....|.....|\n\
+// |^|------.----|\n\
+// |^|    |......|\n\
+// |^------......|\n\
+// |..^^^^0000...|\n\
+// |..-----......|\n\
+// ----   --------",
 //         "\
 // -------- ------\n\
 // |<|>...---....|\n\
@@ -239,8 +239,8 @@ int main() {
         const std::string eString = "\\\\\n"; 
         std::cout << "                     & turns   & states      & time (ms)" << eString;
         std::cout << "Depth First Search   & " << secondsTaken(depthFirstSearch,gameMap) << eString;
-        std::cout << "A*                   & " << secondsTaken(astar<true>,gameMap) << eString;
-        std::cout << "Breadth First Search & " << secondsTaken(breadthFirstSearch,gameMap) << eString;
-        std::cout << "Uniform Cost Search  & " << secondsTaken(astar<false>,gameMap) << eString;
+        // std::cout << "A*                   & " << secondsTaken(astar<true>,gameMap) << eString;
+        // std::cout << "Breadth First Search & " << secondsTaken(breadthFirstSearch,gameMap) << eString;
+        // std::cout << "Uniform Cost Search  & " << secondsTaken(astar<false>,gameMap) << eString;
     }
 }
